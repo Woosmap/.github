@@ -1,8 +1,3 @@
----
-name: WGS PR Template
-about: Need to make an PR? Use this.
----
-
 <!-- The Title above should provide a general summary of the PR -->
 <!-- Any PR which has missing info is not ready to be reviewed -->
 # Description
