@@ -1,6 +1,6 @@
 ---
-name: WGS Issue Template
-about: Need to make an issue? Use this.
+name: WGS Issue Template for Features/Improvements
+about: Need to make an issue for a feature or an improvement? Use this.
 ---
 
 <!-- The Title above should describe clearly and concisely the "what" -->
