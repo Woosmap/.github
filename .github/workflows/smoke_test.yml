@@ -1,0 +1,51 @@
+name: Smoke Test
+
+on:
+  workflow_call:
+    inputs:
+      env:
+        description: 'Env the command was ran'
+        required: true
+        default: 'develop'
+      tag:
+        description: 'Tag to run smoke tests for'
+        required: true
+        default: 'Error'
+      pr:
+        description: 'Pr which set off this run'
+        required: true
+        default: 'Error'
+      success:
+        description: 'If the deploy was successful'
+        required: true
+        default: '1'
+    secrets:
+      helper_token:
+        required: true
+      slack_token:
+        required: true
+
+jobs:
+  check_actions:
+    runs-on: ubuntu-20.04
+    name: Smoke Test After Deploy
+    env:
+      TERM: xterm-256color
+      FORCE_COLOR: 2
+      DOCKER_BUILDKIT: 1
+    steps:
+      - name: Getting Build-Helper Tag
+        run: |
+          echo "HELPER_VERSION=$(git ls-remote --tags https://${{secrets.helper_token}}@github.com/WebGeoServices/build-helper.git | awk '{print $2}' | grep 'refs/tags/v4.*' | sort -nr | head -n 1)" >> $GITHUB_ENV
+      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          repository: WebGeoServices/build-helper
+          ref: ${{ env.HELPER_VERSION }}
+          token: ${{ secrets.helper_token }}
+          path: helper
+          fetch-depth: 1
+      - name: Smoke Test
+        uses: ./helper/.github/actions/run_smoke_tests
+        with:
+          slack_token: ${{ secrets.slack_token }}
