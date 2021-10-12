@@ -1,0 +1,30 @@
+name: PR Checker - Are your labels correct?
+
+on:
+  workflow_call:
+    secrets:
+      helper_token:
+        required: true
+
+jobs:
+  check_actions:
+    runs-on: ubuntu-20.04
+    name: PR Checker
+    env:
+      TERM: xterm-256color
+      FORCE_COLOR: 2
+      DOCKER_BUILDKIT: 1
+    steps:
+      - name: Getting Build-Helper Tag
+        run: |
+          echo "HELPER_VERSION=$(git ls-remote --tags https://${{secrets.helper_token}}@github.com/WebGeoServices/build-helper.git | awk '{print $2}' | grep 'refs/tags/v3.*' | sort -nr | head -n 1)" >> $GITHUB_ENV
+      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          repository: WebGeoServices/build-helper
+          ref: ${{ env.HELPER_VERSION }}
+          token: ${{ secrets.helper_token }}
+          path: helper
+          fetch-depth: 1
+      - name: Check
+        uses: ./helper/.github/actions/check

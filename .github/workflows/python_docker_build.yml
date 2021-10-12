@@ -1,0 +1,63 @@
+name: Build - Python Docker based Service.
+
+on:
+  workflow_call:
+    secrets:
+      helper_token:
+        required: true
+      cache_aws_key_id:
+        required: true
+      cache_aws_key:
+        required: true
+      aws_key_id:
+        required: true
+      aws_key:
+        required: true
+      aws_account:
+        required: true
+      slack_token:
+        required: true
+
+jobs:
+  test_actions:
+    runs-on: ubuntu-20.04
+    name: Lint, Build, Test, Publish
+    env:
+      TERM: xterm-256color
+      FORCE_COLOR: 2
+      DOCKER_BUILDKIT: 1
+    steps:
+      - name: Getting Build-Helper Tag
+        run: |
+          echo "HELPER_VERSION=$(git ls-remote --tags https://${{secrets.helper_token}}@github.com/WebGeoServices/build-helper.git | awk '{print $2}' | grep 'refs/tags/v4.*' | sort -nr | head -n 1)" >> $GITHUB_ENV
+      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          repository: WebGeoServices/build-helper
+          ref: ${{ env.HELPER_VERSION }}
+          token: ${{ secrets.helper_token }}
+          path: helper
+          fetch-depth: 1
+      - name: Login to AWS ECR
+        uses: docker/login-action@v1
+        with:
+          registry:  ${{ secrets.aws_account }}.dkr.ecr.us-east-1.amazonaws.com
+          username: ${{ secrets.aws_key_id }}
+          password: ${{ secrets.aws_key }}
+      - name: Install Lint Dependencies
+        run: |
+          python3 -m pip install -r requirements.txt
+      - name: Pylint Lint
+        uses: ./helper/.github/actions/run_lint
+        with:
+          cache_aws_key_id: ${{ secrets.cache_aws_key_id }}
+          cache_aws_key: ${{ secrets.cache_aws_key }}
+      - name: Docker Build
+        uses: ./helper/.github/actions/builder
+      - name: Test
+        uses: ./helper/.github/actions/run_tests
+        with:
+          cache_aws_key_id: ${{ secrets.cache_aws_key_id }}
+          cache_aws_key: ${{ secrets.cache_aws_key }}
+      - name: Publish
+        uses: ./helper/.github/actions/publish
