@@ -2,6 +2,11 @@ name: Build - Python Docker based Service.
 
 on:
   workflow_call:
+    inputs:
+      envs:
+        default: ''
+        required: false
+        type: string
     secrets:
       helper_token:
         required: true
@@ -30,6 +35,13 @@ jobs:
       FORCE_COLOR: 2
       DOCKER_BUILDKIT: 1
     steps:
+      - name: Set Env Vars
+        run: |
+          IFS=', ' read -r -a array <<< "${{ inputs.envs }}"
+          for str in "${array[@]}"; do
+            echo "${str}" >> $GITHUB_ENV
+          done
+        shell: bash
       - name: Getting Build-Helper Tag
         run: |
           echo "HELPER_VERSION=$(git ls-remote --tags https://${{secrets.helper_token}}@github.com/WebGeoServices/build-helper.git | awk '{print $2}' | grep 'refs/tags/v4.*' | sort -nr | head -n 1)" >> $GITHUB_ENV
@@ -48,8 +60,9 @@ jobs:
           username: ${{ secrets.aws_key_id }}
           password: ${{ secrets.aws_key }}
       - name: Download GeoIP Database
-        if: ${{ env.is_reco }} != ''
+        if: ${{ env.is_reco }}
         run: |
+          ls -l
           ./download_geoip_database.sh
         env:
           MAXMIND: ${{ secrets.maxmind }}
@@ -64,7 +77,7 @@ jobs:
       - name: Docker Build
         uses: ./helper/.github/actions/builder
       - name: Remove Maxmind DB for tests
-        if: ${{ env.is_reco }} != ''
+        if: ${{ env.is_reco }}
         run: rm GeoIP2-City.mmdb
       - name: Test
         uses: ./helper/.github/actions/run_tests
