@@ -7,18 +7,22 @@ on:
         description: 'Env the command was ran'
         required: true
         default: 'develop'
+        type: string
       tag:
         description: 'Tag to run smoke tests for'
         required: true
         default: 'Error'
+        type: string
       pr:
         description: 'Pr which set off this run'
         required: true
         default: 'Error'
+        type: string
       success:
         description: 'If the deploy was successful'
         required: true
         default: '1'
+        type: string
     secrets:
       helper_token:
         required: true
