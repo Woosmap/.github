@@ -67,10 +67,9 @@ jobs:
         if: ${{ inputs.install }} != ''
         run: |
           sudo apt install --no-install-recommends -y ${{ inputs.install }}
-      - name: Download GeoIP Database
+      - name: Download GeoIP (maxmind) DB (for woosmapreco)
         if: ${{ env.is_reco }}
         run: |
-          ls -l
           ./download_geoip_database.sh
         env:
           MAXMIND: ${{ secrets.maxmind }}
@@ -84,7 +83,7 @@ jobs:
           cache_aws_key: ${{ secrets.cache_aws_key }}
       - name: Docker Build
         uses: ./helper/.github/actions/builder
-      - name: Remove Maxmind DB for tests
+      - name: Remove GeoIP (maxmind) DB (for woosmapreco)
         if: ${{ env.is_reco }}
         run: rm GeoIP2-City.mmdb
       - name: Test
