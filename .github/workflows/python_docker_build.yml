@@ -2,6 +2,15 @@ name: Build - Python Docker based Service.
 
 on:
   workflow_call:
+    inputs:
+      envs:
+        default: ''
+        required: false
+        type: string
+      install:
+        default: ''
+        required: false
+        type: string
     secrets:
       helper_token:
         required: true
@@ -17,16 +26,26 @@ on:
         required: true
       slack_token:
         required: true
+      maxmind:
+        required: false
 
 jobs:
   test_actions:
     runs-on: ubuntu-20.04
     name: Lint, Build, Test, Publish
     env:
+      is_reco: ${{ secrets.maxmind }}
       TERM: xterm-256color
       FORCE_COLOR: 2
       DOCKER_BUILDKIT: 1
     steps:
+      - name: Set Env Vars
+        run: |
+          IFS=', ' read -r -a array <<< "${{ inputs.envs }}"
+          for str in "${array[@]}"; do
+            echo "${str}" >> $GITHUB_ENV
+          done
+        shell: bash
       - name: Getting Build-Helper Tag
         run: |
           echo "HELPER_VERSION=$(git ls-remote --tags https://${{secrets.helper_token}}@github.com/WebGeoServices/build-helper.git | awk '{print $2}' | grep 'refs/tags/v4.*' | sort -nr | head -n 1)" >> $GITHUB_ENV
@@ -41,9 +60,19 @@ jobs:
       - name: Login to AWS ECR
         uses: docker/login-action@v1
         with:
-          registry:  ${{ secrets.aws_account }}.dkr.ecr.us-east-1.amazonaws.com
+          registry: ${{ secrets.aws_account }}.dkr.ecr.us-east-1.amazonaws.com
           username: ${{ secrets.aws_key_id }}
           password: ${{ secrets.aws_key }}
+      - name: Install Required Packages
+        if: ${{ inputs.install }} != ''
+        run: |
+          sudo apt install --no-install-recommends --yes ${{ inputs.install }}
+      - name: Download GeoIP (maxmind) DB (for woosmapreco)
+        if: ${{ env.is_reco }}
+        run: |
+          ./download_geoip_database.sh
+        env:
+          MAXMIND: ${{ secrets.maxmind }}
       - name: Install Lint Dependencies
         run: |
           python3 -m pip install -r requirements.txt
@@ -54,6 +83,9 @@ jobs:
           cache_aws_key: ${{ secrets.cache_aws_key }}
       - name: Docker Build
         uses: ./helper/.github/actions/builder
+      - name: Remove GeoIP (maxmind) DB (for woosmapreco)
+        if: ${{ env.is_reco }}
+        run: rm GeoIP2-City.mmdb
       - name: Test
         uses: ./helper/.github/actions/run_tests
         with:
