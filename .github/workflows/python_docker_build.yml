@@ -81,11 +81,6 @@ jobs:
       - name: Install Lint Dependencies
         run: |
           python3 -m pip install -r requirements.txt
-      - name: Pylint Lint
-        uses: ./helper/.github/actions/run_lint
-        with:
-          cache_aws_key_id: ${{ secrets.cache_aws_key_id }}
-          cache_aws_key: ${{ secrets.cache_aws_key }}
       - name: Docker Build
         uses: ./helper/.github/actions/builder
       - name: Remove GeoIP (maxmind) DB (for woosmapreco)
