@@ -26,5 +26,8 @@ jobs:
           token: ${{ secrets.helper_token }}
           path: helper
           fetch-depth: 1
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
       - name: Check
         uses: ./helper/.github/actions/check

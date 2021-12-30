@@ -49,6 +49,9 @@ jobs:
           token: ${{ secrets.helper_token }}
           path: helper
           fetch-depth: 1
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
       - name: Smoke Test
         uses: ./helper/.github/actions/run_smoke_tests
         with:
