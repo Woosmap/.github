@@ -70,7 +70,7 @@ jobs:
           password: ${{ secrets.aws_key }}
       - name: Install Bender
         run: |
-          pip install --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender==0.4.*"
+          pip install --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender==0.5.*"
       - name: Install Required Packages
         if: ${{ inputs.install }} != ''
         run: |
@@ -88,7 +88,11 @@ jobs:
         run: rm GeoIP2-City.mmdb
       - name: Bender Test
         uses: ./helper/.github/actions/run_tests
+      - name: Cache code coverage
+        uses: ./helper/.github/actions/cache
         with:
+          path: './coverage/coverage.xml'
+          key: 'coverage'
           cache_aws_key_id: ${{ secrets.cache_aws_key_id }}
           cache_aws_key: ${{ secrets.cache_aws_key }}
       - name: SonarCloud Scan
