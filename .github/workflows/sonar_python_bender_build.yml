@@ -95,19 +95,6 @@ jobs:
           key: 'coverage'
           cache_aws_key_id: ${{ secrets.cache_aws_key_id }}
           cache_aws_key: ${{ secrets.cache_aws_key }}
-      - name: REMOVE TESTING
-        run: |
-          ls
-          rm -r ./coverage
-          ls
-      - name: REMOVE TESTING Restore code coverage cache
-        uses: ./helper/.github/actions/cache
-        with:
-          restore: 'true'
-          path: './coverage/coverage.xml'
-          key: 'coverage'
-          cache_aws_key_id: ${{ secrets.cache_aws_key_id }}
-          cache_aws_key: ${{ secrets.cache_aws_key }}
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
