@@ -34,7 +34,7 @@ on:
 jobs:
   test_actions:
     if: |
-      (github.event_name == 'pull_request' && github.actor == 'dependabot[bot]') ||
+      (github.event_name == 'pull_request' && github.actor != 'dependabot[bot]') ||
       (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]')
     runs-on: ubuntu-20.04
     name: Build, Test, Sonar, Publish
