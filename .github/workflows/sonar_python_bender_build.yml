@@ -105,3 +105,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.sonar_token}}
       - name: Publish
         uses: ./helper/.github/actions/publish
+      - name: PR Deploy
+        uses: ./helper/.github/actions/deploy
+        with:
+          pr_deploy: 'true'
