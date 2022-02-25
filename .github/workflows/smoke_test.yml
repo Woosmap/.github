@@ -23,6 +23,11 @@ on:
         required: true
         default: '1'
         type: string
+      is_pr_deploy:
+        description: 'If running a smoke-test on a PR set to true'
+        required: false
+        default: false
+        type: boolean
     secrets:
       helper_token:
         required: true
@@ -40,7 +45,7 @@ jobs:
     steps:
       - name: Getting Build-Helper Tag
         run: |
-          echo "HELPER_VERSION=$(git ls-remote --tags https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git | awk '{print $2}' | grep 'refs/tags/v4.*' | sort -nr | head -n 1)" >> $GITHUB_ENV
+          echo "HELPER_VERSION=$(git ls-remote --tags https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git | awk '{print $2}' | grep 'refs/tags/v5.*' | sort -nr | head -n 1)" >> $GITHUB_ENV
       - uses: actions/checkout@v2
       - uses: actions/checkout@v2
         with:
