@@ -26,8 +26,8 @@ on:
       is_pr_deploy:
         description: 'If running a smoke-test on a PR set to true'
         required: false
-        default: false
-        type: boolean
+        default: 'false'
+        type: string
     secrets:
       helper_token:
         required: true
