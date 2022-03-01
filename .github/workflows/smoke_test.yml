@@ -60,4 +60,5 @@ jobs:
       - name: Smoke Test
         uses: ./helper/.github/actions/run_smoke_tests
         with:
+          pr_deploy: ${{ inputs.pr_deploy }}
           slack_token: ${{ secrets.slack_token }}
