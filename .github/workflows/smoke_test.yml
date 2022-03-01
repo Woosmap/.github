@@ -23,7 +23,7 @@ on:
         required: true
         default: '1'
         type: string
-      is_pr_deploy:
+      pr_deploy:
         description: 'If running a smoke-test on a PR set to true'
         required: false
         default: 'false'
