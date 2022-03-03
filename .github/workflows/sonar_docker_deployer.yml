@@ -31,7 +31,7 @@ jobs:
     steps:
       - name: Getting Build-Helper Tag
         run: |
-          echo "HELPER_VERSION=$(git ls-remote --tags https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git | awk '{print $2}' | grep 'refs/tags/v4.*' | sort -nr | head -n 1)" >> $GITHUB_ENV
+          echo "HELPER_VERSION=$(git ls-remote --tags https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git | awk '{print $2}' | grep 'refs/tags/v5.*' | sort -nr | head -n 1)" >> $GITHUB_ENV
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
@@ -48,6 +48,11 @@ jobs:
           registry:  ${{ secrets.aws_account }}.dkr.ecr.us-east-1.amazonaws.com
           username: ${{ secrets.aws_key_id }}
           password: ${{ secrets.aws_key }}
+      - name: Destroy PR Deploy
+        uses: ./helper/.github/actions/deploy
+        with:
+          pr_deploy: 'true'
+          pr_destroy: 'true'
       - name: Release
         uses: ./helper/.github/actions/release
         with:
