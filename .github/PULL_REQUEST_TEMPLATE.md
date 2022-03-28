@@ -22,7 +22,7 @@ _I used this library to add this to make that better_
 _If one of the above boxes is not ticked please explain why._
 
 ## Steps to Test or Reproduce
-- `./run_test.sh`
+- `bender test`
 
 # Ops
 ## Deploy
