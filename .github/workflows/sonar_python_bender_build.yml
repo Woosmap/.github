@@ -86,9 +86,6 @@ jobs:
           MAXMIND: ${{ secrets.maxmind }}
       - name: Bender Build
         uses: ./helper/.github/actions/builder
-      - name: Remove GeoIP (maxmind) DB (for woosmapreco)
-        if: ${{ env.is_reco }}
-        run: rm GeoIP2-City.mmdb
       - name: Bender Test
         uses: ./helper/.github/actions/run_tests
       - name: Cache code coverage
