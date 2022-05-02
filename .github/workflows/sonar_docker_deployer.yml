@@ -48,6 +48,9 @@ jobs:
           registry:  ${{ secrets.aws_account }}.dkr.ecr.us-east-1.amazonaws.com
           username: ${{ secrets.aws_key_id }}
           password: ${{ secrets.aws_key }}
+      - name: Install Bender
+        run: |
+          pip install --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender==0.7.*"
       - name: Destroy PR Deploy
         uses: ./helper/.github/actions/deploy
         with:
