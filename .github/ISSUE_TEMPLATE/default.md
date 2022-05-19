@@ -18,6 +18,11 @@ Clients | Customer Care | Sales | Marketing
 # Solution
 ## How
 <!-- How should this change be made? -->
+<!-- Explain your plan in a few sentences -->
+<!-- And, possibly provide a breakdown of the solution into small tasks/steps to track progress -->
+- [ ] task one
+- [ ] task two
+
 ### Supporting Information
 <!-- Screenshots of what you are thinking, links to websites or blogs with examples, link to a new API documentation, etc. Add them all here -->
 ### Expected Change Level
@@ -26,11 +31,6 @@ Major | Minor | Patch
 ### Dependencies
 <!-- List of other issues, teams, actions, etc. that are needed for this issue -->
 - [ ] #42
-
-# Definition of Done (DoD)
-<!-- Breakdown of this issue into smaller tasks/steps to track the progress -->
-- [ ] task one
-- [ ] task two
 
 # Acceptance Criteria (AC)
 <!-- Clearly defined expectations of the solution -->
