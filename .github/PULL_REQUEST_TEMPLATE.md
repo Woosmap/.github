@@ -1,34 +1,54 @@
-<!-- The Title above should provide a general summary of the PR -->
-<!-- Any PR which has missing info is not ready to be reviewed -->
+<!-- The title of the PR ↑↑↑ above should provide a general summary of what it is about. -->
+<!-- Warning: any PR that has missing info is not ready to be reviewed. -->
+
 # Description
 ## Issue
-<!-- Use `closes #1` with the number of the issue to find the issue -->
+<!-- Link the PR to one or more issues. -->
+<!-- Use "closes" followed by the issue ID. 
+closes #314159
+-->
 
 ## What
-<!-- What did you do? -->
-_Added a new endpoint, fixed a bug... etc._
+<!-- What did you do? (Functionally).
+Added this new feature/value, fixed that bug/behaviour…
+-->
 
 ## How
-<!-- How did you do it? (Technically) -->
-_I used this library to add this to make that better_
+<!-- How did you do it? (Technically).
+I used this library to add this to make that better.
+-->
 
 ## Related PRs
-<!-- List of related PRs against other branches/repos -->
-<!-- - [ ] #1 -->
+<!-- List of possible related PRs against other branches/repos.
+<!-- Alternatively, indicate "None".
+- [ ] #271828
+- [ ] ...
+-->
 
 # Testing
+## Automated tests
 - [ ] Unit Tests cover the change
 - [ ] Smoke Tests cover the change  
-_If one of the above boxes is not ticked please explain why._
 
-## Steps to Test or Reproduce
-- `bender test`
+<!-- Notice: if one of the above boxes is not ticked, please explain why. -->
+
+## Steps to test or reproduce
+<!-- Command to initiate automated tests.
+`bender test`
+-->
+
+<!-- Or, list of steps to follow for manual testing.
+- Do this
+- Do that
+- ...
+-->
 
 # Ops
-## Deploy
-- [ ] This is a standard deployment  
-_If this box is not ticked please explain why and detail the steps to deploy._
+## Deployment
+- [ ] This is a standard deployment
+
+<!-- Notice: if this box is not ticked, please explain why and detail the steps to deploy. -->
 
 ## Migrations
 <!-- Choose one -->
-Yes | No
+Yes/No.
