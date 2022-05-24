@@ -19,7 +19,7 @@ I used this library to add this to make that better.
 -->
 
 ## Related PRs
-<!-- List of possible related PRs against other branches/repos.
+<!-- List of possible related PRs against other repos.
 <!-- Alternatively, indicate "None".
 - [ ] #271828
 - [ ] ...
@@ -43,11 +43,11 @@ I used this library to add this to make that better.
 - ...
 -->
 
-# Ops
-## Deployment
+# Deployment
+## Strategy
 - [ ] This is a standard deployment
 
-<!-- Notice: if this box is not ticked, please explain why and detail the steps to deploy. -->
+<!-- Warning: if this box is not ticked, please detail the steps to deploy and TALK TO THE OPS TEAM! -->
 
 ## Migrations
 <!-- Choose one -->
