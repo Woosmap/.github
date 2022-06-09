@@ -19,6 +19,8 @@ on:
         required: true
       slack_token:
         required: true
+      leela_token:
+        required: true
 
 jobs:
   deploy_actions:
@@ -31,7 +33,7 @@ jobs:
     steps:
       - name: Getting Build-Helper Tag
         run: |
-          echo "HELPER_VERSION=$(git ls-remote --tags https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git | awk '{print $2}' | grep 'refs/tags/v5.*' | sort -nr | head -n 1)" >> $GITHUB_ENV
+          echo "HELPER_VERSION=$(git ls-remote --tags https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git | awk '{print $2}' | grep 'refs/tags/v6.*' | sort -nr | head -n 1)" >> $GITHUB_ENV
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
@@ -50,7 +52,7 @@ jobs:
           password: ${{ secrets.aws_key }}
       - name: Install Bender
         run: |
-          pip install --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender==0.7.*"
+          pip install --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender==0.8.*"
       - name: Destroy PR Deploy
         uses: ./helper/.github/actions/deploy
         with:
