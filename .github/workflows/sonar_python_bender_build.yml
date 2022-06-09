@@ -108,3 +108,4 @@ jobs:
         uses: ./helper/.github/actions/deploy
         with:
           pr_deploy: 'true'
+          leela_token: ${{ secrets.leela_token }}
