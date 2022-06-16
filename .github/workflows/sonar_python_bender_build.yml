@@ -3,10 +3,6 @@ name: Build - Python Docker based Service and run Sonar Checks.
 on:
   workflow_call:
     inputs:
-      envs:
-        default: ''
-        required: false
-        type: string
       install:
         default: ''
         required: false
@@ -46,13 +42,6 @@ jobs:
       FORCE_COLOR: 2
       DOCKER_BUILDKIT: 1
     steps:
-      - name: Set Env Vars
-        run: |
-          IFS=', ' read -r -a array <<< "${{ inputs.envs }}"
-          for str in "${array[@]}"; do
-            echo "${str}" >> $GITHUB_ENV
-          done
-        shell: bash
       - name: Getting Build-Helper Tag
         run: |
           echo "HELPER_VERSION=$(git ls-remote --tags https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git | awk '{print $2}' | grep 'refs/tags/v6.*' | sort -nr | head -n 1)" >> $GITHUB_ENV
