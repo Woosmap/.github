@@ -19,6 +19,8 @@ on:
         required: true
       slack_token:
         required: true
+      leela_token:
+        required: false
 
 jobs:
   deploy_actions:

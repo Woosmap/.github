@@ -30,6 +30,8 @@ on:
         required: true
       maxmind:
         required: false
+      leela_token:
+        required: false
 
 jobs:
   test_actions:
