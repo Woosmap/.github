@@ -53,11 +53,6 @@ jobs:
       - name: Install Bender
         run: |
           pip install --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender==0.8.*"
-      - name: Destroy PR Deploy
-        uses: ./helper/.github/actions/deploy
-        with:
-          pr_deploy: 'true'
-          pr_destroy: 'true'
       - name: Release
         uses: ./helper/.github/actions/release
         with:
