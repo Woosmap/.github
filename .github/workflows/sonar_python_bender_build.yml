@@ -28,6 +28,8 @@ on:
         required: true
       maxmind:
         required: false
+      download_merchant_ml:
+        required: false
 
 jobs:
   test_actions:
@@ -75,6 +77,10 @@ jobs:
           ./download_geoip_database.sh
         env:
           MAXMIND: ${{ secrets.maxmind }}
+      - name: Download Merchants Model
+        if: ${{ secrets.download_merchant_ml }}
+        run: |
+          ./download_ml_job.sh
       - name: Bender Build
         uses: ./helper/.github/actions/builder
       - name: Bender Test
