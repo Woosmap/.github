@@ -7,6 +7,10 @@ on:
         default: ''
         required: false
         type: string
+      download_merchant_ml:
+        default: false
+        required: false
+        type: boolean
     secrets:
       helper_token:
         required: true
@@ -27,8 +31,6 @@ on:
       leela_token:
         required: true
       maxmind:
-        required: false
-      download_merchant_ml:
         required: false
 
 jobs:
@@ -78,7 +80,7 @@ jobs:
         env:
           MAXMIND: ${{ secrets.maxmind }}
       - name: Download Merchants Model
-        if: ${{ secrets.download_merchant_ml }}
+        if: ${{ inputs.download_merchant_ml }}
         run: |
           ./download_ml_job.sh
       - name: Bender Build
