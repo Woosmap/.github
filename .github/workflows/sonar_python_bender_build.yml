@@ -83,6 +83,8 @@ jobs:
         if: ${{ inputs.download_merchant_ml }}
         run: |
           ./download_ml_job.sh
+        env:
+          AWS_EC2_METADATA_DISABLED: true
       - name: Bender Build
         uses: ./helper/.github/actions/builder
       - name: Bender Test
