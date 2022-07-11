@@ -7,6 +7,10 @@ on:
         default: ''
         required: false
         type: string
+      download_merchant_ml:
+        default: false
+        required: false
+        type: boolean
     secrets:
       helper_token:
         required: true
@@ -75,6 +79,12 @@ jobs:
           ./download_geoip_database.sh
         env:
           MAXMIND: ${{ secrets.maxmind }}
+      - name: Download Merchants Model
+        if: ${{ inputs.download_merchant_ml }}
+        run: |
+          ./download_ml_job.sh
+        env:
+          AWS_EC2_METADATA_DISABLED: true
       - name: Bender Build
         uses: ./helper/.github/actions/builder
       - name: Bender Test
