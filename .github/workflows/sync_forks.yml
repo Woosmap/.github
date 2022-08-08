@@ -1,0 +1,21 @@
+name: Sync Forks
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "0 9 * * *" # At 09:00 every day
+  workflow_dispatch:
+jobs:
+  update_definitelytyped_fork:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: TobKed/github-forks-sync-action@master
+        with:
+          github_token: ${{ secrets.HELPER_TOKEN }}
+          upstream_repository: DefinitelyTyped/DefinitelyTyped
+          target_repository: woosmap/DefinitelyTyped
+          upstream_branch: master
+          target_branch: master
+          force: true
+          tags: true
