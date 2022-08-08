@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: TobKed/github-forks-sync-action@master
         with:
-          github_token: ${{ secrets.HELPER_TOKEN }}
+          github_token: ${{ secrets.PUBLIC_GITHUB_TOKEN }}
           upstream_repository: DefinitelyTyped/DefinitelyTyped
           target_repository: woosmap/DefinitelyTyped
           upstream_branch: master
