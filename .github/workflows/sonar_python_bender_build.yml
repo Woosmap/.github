@@ -103,6 +103,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.sonar_token}}
       - name: Publish
         uses: ./helper/.github/actions/publish
+        with:
+          leela_token: ${{ secrets.leela_token }}
       - name: PR Deploy
         uses: ./helper/.github/actions/deploy
         with:
