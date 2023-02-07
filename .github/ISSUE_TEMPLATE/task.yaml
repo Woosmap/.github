@@ -1,4 +1,4 @@
-name: Task :green_book:
+name: Task 📗
 description: Track a single simple piece of work
 labels: []
 
@@ -17,12 +17,14 @@ body:
     required: true
 - type: textarea
   attributes:
-    label: Solution
-    description: Suggested solution.
+    label: Engineering Section
+    description: After engineers have discussed are there any comments, solution points or push back
 - type: textarea
   attributes:
     label: Blockers
-    description: List tasks, if any, which must be completed to start this one.
+    description: List tasks, info etc., if any, which must be completed to start this one.
+    placeholder: |
+      "- [ ] Woosmap/maps#1"
 - type: markdown
   attributes:
     value: |

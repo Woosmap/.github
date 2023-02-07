@@ -1,4 +1,4 @@
-name: EPIC :books:
+name: EPIC 📚
 description: Track a large task which can be split up into smaller tasks.
 title: "[EPIC]: "
 labels: []
@@ -18,8 +18,8 @@ body:
     required: true
 - type: textarea
   attributes:
-    label: Solution
-    description: Suggested solution, if there isn't one yet maybe a SPIKE should be the first sub-task.
+    label: Engineering Section
+    description: After engineers have discussed are there any comments, solution points or push back
 - type: textarea
   attributes:
     label: Sub-Tasks
