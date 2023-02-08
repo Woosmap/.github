@@ -1,7 +1,6 @@
 name: EPIC 📚
 description: Track a large task which can be split up into smaller tasks.
-title: "[EPIC]: "
-labels: []
+title: "[EPIC] "
 
 body:
 - type: textarea
