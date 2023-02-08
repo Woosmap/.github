@@ -4,6 +4,10 @@ title: "[BUG] "
 labels: []
 
 body:
+- type: markdown
+  attributes:
+    value: |
+      For more info on how to use a Bug look [here](https://docs.woosmap.dev/how_we_work/issues/#bugs)
 - type: textarea
   attributes:
     label: Description

@@ -3,6 +3,10 @@ description: Track a single simple piece of work
 labels: []
 
 body:
+- type: markdown
+  attributes:
+    value: |
+      For more info on how to use a Task look [here](https://docs.woosmap.dev/how_we_work/issues/#tasks)
 - type: textarea
   attributes:
     label: What?

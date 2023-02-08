@@ -3,6 +3,10 @@ description: Track a large task which can be split up into smaller tasks.
 title: "[EPIC] "
 
 body:
+- type: markdown
+  attributes:
+    value: |
+      For more info on how to use an EPIC look [here](https://docs.woosmap.dev/how_we_work/issues/#epics)
 - type: textarea
   attributes:
     label: What?

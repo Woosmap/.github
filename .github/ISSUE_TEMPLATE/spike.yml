@@ -3,6 +3,10 @@ description: A dicision needs to be made
 title: "[SPIKE] "
 
 body:
+- type: markdown
+  attributes:
+    value: |
+      For more info on how to use a SPIKE look [here](https://docs.woosmap.dev/how_we_work/issues/#spikes)
 - type: textarea
   attributes:
     label: EPIC
