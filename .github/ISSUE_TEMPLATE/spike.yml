@@ -9,12 +9,6 @@ body:
       For more info on how to use a SPIKE look [here](https://docs.woosmap.dev/how_we_work/issues/#spikes)
 - type: textarea
   attributes:
-    label: EPIC
-    description: The EPIC this SPIKE is for.
-  validations:
-    required: true
-- type: textarea
-  attributes:
     label: Question
     description: The Question to be answered.
   validations:

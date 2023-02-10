@@ -28,7 +28,10 @@ body:
     label: Sub-Tasks
     description: Tasks which need to be complete to close this EPIC.
     value: |
+      ```[tasklist]
+      ### TODO
       - [ ] #1
+      ```
   validations:
     required: true
 - type: markdown
