@@ -38,7 +38,7 @@ jobs:
     if: |
       (github.event_name == 'pull_request' && github.actor != 'dependabot[bot]') ||
       (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]')
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     name: Build, Test, Sonar, Publish
     env:
       is_reco: ${{ secrets.maxmind }}
@@ -49,11 +49,11 @@ jobs:
       - name: Getting Build-Helper Tag
         run: |
           echo "HELPER_VERSION=$(git ls-remote --tags https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git | awk '{print $2}' | grep 'refs/tags/v7.*' | sort -nr | head -n 1)" >> $GITHUB_ENV
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: Woosmap/build-helper
           ref: ${{ env.HELPER_VERSION }}
@@ -61,7 +61,7 @@ jobs:
           path: helper
           fetch-depth: 1
       - name: Login to AWS ECR
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: ${{ secrets.aws_account }}.dkr.ecr.us-east-1.amazonaws.com
           username: ${{ secrets.aws_key_id }}
@@ -97,7 +97,7 @@ jobs:
           cache_aws_key_id: ${{ secrets.cache_aws_key_id }}
           cache_aws_key: ${{ secrets.cache_aws_key }}
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarcloud-github-action@masterf
         env:
           GITHUB_TOKEN: ${{ secrets.helper_token }}
           SONAR_TOKEN: ${{ secrets.sonar_token}}

@@ -20,7 +20,7 @@ on:
 
 jobs:
   deploy_actions:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     name: Deploy Docker
     env:
       TERM: xterm-256color
@@ -30,19 +30,19 @@ jobs:
       - name: Getting Build-Helper Tag
         run: |
           echo "HELPER_VERSION=$(git ls-remote --tags https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git | awk '{print $2}' | grep 'refs/tags/v4.*' | sort -nr | head -n 1)" >> $GITHUB_ENV
-      - uses: actions/checkout@v2
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           repository: Woosmap/build-helper
           ref: ${{ env.HELPER_VERSION }}
           token: ${{ secrets.helper_token}}
           path: helper
           fetch-depth: 1
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: '14'
       - name: Login to AWS ECR
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry:  ${{ secrets.aws_account }}.dkr.ecr.us-east-1.amazonaws.com
           username: ${{ secrets.aws_key_id }}
