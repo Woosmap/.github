@@ -97,7 +97,7 @@ jobs:
           cache_aws_key_id: ${{ secrets.cache_aws_key_id }}
           cache_aws_key: ${{ secrets.cache_aws_key }}
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@masterf
+        uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.helper_token }}
           SONAR_TOKEN: ${{ secrets.sonar_token}}
