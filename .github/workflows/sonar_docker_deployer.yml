@@ -21,6 +21,8 @@ on:
         required: true
       leela_token:
         required: true
+      prod_leela_token:
+        required: true
 
 jobs:
   deploy_actions:
