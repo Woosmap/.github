@@ -60,6 +60,7 @@ jobs:
         with:
           slack_token: ${{ secrets.slack_token }}
           leela_token: ${{ secrets.leela_token }}
+          prod_leela_token: ${{ secrets.prod_leela_token}}
           cache_aws_key_id: ${{ secrets.cache_aws_key_id }}
           cache_aws_key: ${{ secrets.cache_aws_key }}
       - name: Deploy Develop
