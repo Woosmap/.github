@@ -1,6 +1,6 @@
 name: SPIKE 🔍
 description: A dicision needs to be made
-title: "[SPIKE] "
+label: ["⚡"]
 
 body:
 - type: markdown
