@@ -59,7 +59,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
       - name: Docker Install
-        if: ${{ runner.name == 'test-arm' }}
+        if: contains(runner.name, 'test-arm')
         run: |
           sudo apt-get update
           sudo apt-get install ca-certificates curl
