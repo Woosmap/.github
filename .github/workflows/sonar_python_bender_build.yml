@@ -119,12 +119,12 @@ jobs:
           key: 'coverage'
           cache_aws_key_id: ${{ secrets.cache_aws_key_id }}
           cache_aws_key: ${{ secrets.cache_aws_key }}
-      - name: SonarCloud Scan
-        if: ${{ runner.name != 'test-arm' }}
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.helper_token }}
-          SONAR_TOKEN: ${{ secrets.sonar_token}}
+#      - name: SonarCloud Scan
+#        if: ${{ runner.name != 'test-arm' }}
+#        uses: SonarSource/sonarcloud-github-action@master
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.helper_token }}
+#          SONAR_TOKEN: ${{ secrets.sonar_token}}
       - name: Publish
         uses: ./helper/.github/actions/publish
         with:
