@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Getting Build-Helper Tag
         run: |
-          echo "HELPER_VERSION=$(git ls-remote --tags --sort="v:refname" https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git v7.\* | awk '{print $2}' | tail -n 1)" >> $GITHUB_ENV
+          echo "HELPER_VERSION=$(git ls-remote --tags --sort="v:refname" https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git v8.\* | awk '{print $2}' | tail -n 1)" >> $GITHUB_ENV
       - uses: actions/checkout@v3
       - uses: actions/checkout@v3
         with:
@@ -28,6 +28,6 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: '20'
       - name: Check
         uses: ./helper/.github/actions/check

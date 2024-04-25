@@ -51,7 +51,7 @@ jobs:
         shell: bash
       - name: Getting Build-Helper Tag
         run: |
-          echo "HELPER_VERSION=$(git ls-remote --tags --sort="v:refname" https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git v4.\* | awk '{print $2}' | tail -n 1)" >> $GITHUB_ENV
+          echo "HELPER_VERSION=$(git ls-remote --tags --sort="v:refname" https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git v8.\* | awk '{print $2}' | tail -n 1)" >> $GITHUB_ENV
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
@@ -64,7 +64,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: '20'
       - name: Login to AWS ECR
         uses: docker/login-action@v2
         with:
