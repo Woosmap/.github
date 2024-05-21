@@ -47,10 +47,11 @@ jobs:
       TERM: xterm-256color
       FORCE_COLOR: 2
       DOCKER_BUILDKIT: 1
-      DOCKER_HOST: unix:///var/run/docker.sock
     steps:
       - name: Getting Build-Helper Tag
         run: |
+          echo $DOCKER_HOST
+          docker info
           echo "HELPER_VERSION=$(git ls-remote --tags --sort="v:refname" https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git v8.\* | awk '{print $2}' | tail -n 1)" >> $GITHUB_ENV
       - uses: actions/checkout@v4
         with:
