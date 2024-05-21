@@ -49,7 +49,7 @@ jobs:
           password: ${{ secrets.aws_key }}
       - name: Install Bender
         run: |
-          pip install --user --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender==2.1.*"
+          pip install --break-system-packages --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender==2.1.*"
       - name: Release
         uses: ./helper/.github/actions/release
         with:

@@ -73,7 +73,7 @@ jobs:
           password: ${{ secrets.aws_key }}
       - name: Install Bender
         run: |
-          pip install --user --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender==2.1.*"
+          pip install --break-system-packages --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender==2.1.*"
       - name: Install Required Packages
         if: ${{ inputs.install }} != ''
         run: |
@@ -86,7 +86,7 @@ jobs:
           MAXMIND: ${{ secrets.maxmind }}
       - name: Install Lint Dependencies
         run: |
-          python3 -m pip install --user -r requirements.txt
+          python3 -m pip install --break-system-packages -r requirements.txt
       - name: Pylint Lint
         uses: ./helper/.github/actions/run_lint
         with:
