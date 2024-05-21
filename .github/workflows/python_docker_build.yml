@@ -52,28 +52,28 @@ jobs:
       - name: Getting Build-Helper Tag
         run: |
           echo "HELPER_VERSION=$(git ls-remote --tags --sort="v:refname" https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git v8.\* | awk '{print $2}' | tail -n 1)" >> $GITHUB_ENV
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: Woosmap/build-helper
           ref: ${{ env.HELPER_VERSION }}
           token: ${{ secrets.helper_token }}
           path: helper
           fetch-depth: 1
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
       - name: Login to AWS ECR
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ${{ secrets.aws_account }}.dkr.ecr.us-east-1.amazonaws.com
           username: ${{ secrets.aws_key_id }}
           password: ${{ secrets.aws_key }}
       - name: Install Bender
         run: |
-          pip install --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender==1.3.*"
+          pip install --user --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender==2.1.*"
       - name: Install Required Packages
         if: ${{ inputs.install }} != ''
         run: |
@@ -86,7 +86,7 @@ jobs:
           MAXMIND: ${{ secrets.maxmind }}
       - name: Install Lint Dependencies
         run: |
-          python3 -m pip install -r requirements.txt
+          python3 -m pip install --user -r requirements.txt
       - name: Pylint Lint
         uses: ./helper/.github/actions/run_lint
         with:
