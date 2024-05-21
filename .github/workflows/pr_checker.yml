@@ -8,7 +8,7 @@ on:
 
 jobs:
   check_actions:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     name: PR Checker
     env:
       TERM: xterm-256color
@@ -18,15 +18,15 @@ jobs:
       - name: Getting Build-Helper Tag
         run: |
           echo "HELPER_VERSION=$(git ls-remote --tags --sort="v:refname" https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git v8.\* | awk '{print $2}' | tail -n 1)" >> $GITHUB_ENV
-      - uses: actions/checkout@v3
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           repository: Woosmap/build-helper
           ref: ${{ env.HELPER_VERSION }}
           token: ${{ secrets.helper_token }}
           path: helper
           fetch-depth: 1
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
       - name: Check
