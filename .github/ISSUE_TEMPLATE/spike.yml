@@ -1,6 +1,7 @@
 name: SPIKE 🔍
 description: A dicision needs to be made
 labels: ["spike"]
+projects: ["Woosmap/29"]
 
 body:
 - type: markdown
