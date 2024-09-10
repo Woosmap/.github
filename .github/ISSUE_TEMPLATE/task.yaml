@@ -1,6 +1,7 @@
 name: Task 📗
 description: Track a single simple piece of work
 labels: []
+projects: ["Woosmap/29"]
 
 body:
 - type: markdown
