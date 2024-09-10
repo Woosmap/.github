@@ -1,6 +1,7 @@
 name: EPIC 📚
 description: Track a large task which can be split up into smaller tasks.
 title: "[EPIC] "
+projects: ["Woosmap/29"]
 
 body:
 - type: markdown
