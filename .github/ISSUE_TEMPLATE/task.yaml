@@ -1,4 +1,4 @@
-name: Task 📗
+name: Feature 📗
 description: Track a single simple piece of work
 labels: []
 projects: ["Woosmap/29"]
@@ -17,7 +17,7 @@ body:
 - type: textarea
   attributes:
     label: Why?
-    description: Why is this change important or a link to the EPIC associated with this task.
+    description: Why is this change important.
   validations:
     required: true
 - type: textarea
@@ -29,11 +29,9 @@ body:
     label: Blockers
     description: List tasks, info etc., if any, which must be completed to start this one.
     placeholder: |
-      "- [ ] Woosmap/maps#1"
+      "- [ ] <Woosmap/maps#1>"
 - type: markdown
   attributes:
     value: |
       Thanks for completing the form!
-      Don't forget to select the project on the right ->
-      and to then, if possible fill in the project fields.
-      If this task is part of an EPIC you should add this to its sub-tasks.
+      Don't forget to fill in the project fields.
