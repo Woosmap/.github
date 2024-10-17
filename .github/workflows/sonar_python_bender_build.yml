@@ -48,6 +48,11 @@ jobs:
       FORCE_COLOR: 2
       DOCKER_BUILDKIT: 1
     steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: "woosmap"
+          password: ${{ secrets.DOCKERHUB_RO_TOKEN }}
       - name: Getting Build-Helper Tag
         run: |
           echo "HELPER_VERSION=$(git ls-remote --tags --sort="v:refname" https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git v8.\* | awk '{print $2}' | tail -n 1)" >> $GITHUB_ENV
