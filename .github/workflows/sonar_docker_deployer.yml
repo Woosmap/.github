@@ -23,6 +23,8 @@ on:
         required: true
       prod_leela_token:
         required: true
+      dockerhub_ro_token:
+        required: true
 
 jobs:
   deploy_actions:
@@ -37,7 +39,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: "woosmap"
-          password: ${{ secrets.DOCKERHUB_RO_TOKEN }}
+          password: ${{ secrets.dockerhub_ro_token }}
       - name: Getting Build-Helper Tag
         run: |
           echo "HELPER_VERSION=$(git ls-remote --tags --sort="v:refname" https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git v8.\* | awk '{print $2}' | tail -n 1)" >> $GITHUB_ENV
