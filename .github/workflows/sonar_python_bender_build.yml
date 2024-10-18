@@ -34,6 +34,8 @@ on:
         required: true
       maxmind:
         required: false
+      dockerhub_ro_token:
+        required: false
 
 jobs:
   test_actions:
@@ -44,10 +46,17 @@ jobs:
     name: Build, Test, Sonar, Publish
     env:
       is_reco: ${{ secrets.maxmind }}
+      docker_password: ${{ secrets.dockerhub_ro_token }}
       TERM: xterm-256color
       FORCE_COLOR: 2
       DOCKER_BUILDKIT: 1
     steps:
+      - name: Login to Docker Hub
+        if: ${{ env.docker_password }}
+        uses: docker/login-action@v3
+        with:
+          username: "woosmap"
+          password: ${{ secrets.dockerhub_ro_token }}
       - name: Getting Build-Helper Tag
         run: |
           echo "HELPER_VERSION=$(git ls-remote --tags --sort="v:refname" https://${{secrets.helper_token}}@github.com/Woosmap/build-helper.git v8.\* | awk '{print $2}' | tail -n 1)" >> $GITHUB_ENV

@@ -23,7 +23,7 @@ body:
     label: Outcomes
     description: The result of each solution tried.
     value: |
-      - [ ] 1
+      - [ ] Change Me
 - type: textarea
   attributes:
     label: Decision Makers
