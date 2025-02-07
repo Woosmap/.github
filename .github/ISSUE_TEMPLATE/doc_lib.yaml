@@ -15,7 +15,7 @@ body:
 - type: input
   attributes:
     label: Related Issue
-    Description: URL to the issue which causes this change
+    description: URL to the issue which causes this change
 - type: textarea
   attributes:
     label: Description
