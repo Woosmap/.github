@@ -62,3 +62,23 @@ jobs:
         with:
           pr_deploy: ${{ inputs.pr_deploy }}
           slack_token: ${{ secrets.slack_token }}
+
+      - name: Install Zoidberg
+        run: |
+          # Add Gemfury repository
+          echo "deb [trusted=yes] https://Pfii9sZDGkGXEhXEmStx@fury.io/your-gemfury-account/ /" | sudo tee /etc/apt/sources.list.d/gemfury.list
+          
+          # Update package list
+          sudo apt-get update
+          
+          # Install Zoidberg deb package
+          sudo apt-get install -y zoidberg
+
+      - name: Run zoidberg non regression tests
+        run: |
+          output=$(zoidberg -d ./zoidberg_tests distance)
+          echo "Script Output: $output"
+          if [[ $output != "OK" ]]; then
+            echo "Non regression tests FAILED"
+            exit 1
+          fi
