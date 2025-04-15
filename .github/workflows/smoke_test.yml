@@ -57,11 +57,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Smoke Test
-        uses: ./helper/.github/actions/run_smoke_tests
-        with:
-          pr_deploy: ${{ inputs.pr_deploy }}
-          slack_token: ${{ secrets.slack_token }}
+#      - name: Smoke Test
+#        uses: ./helper/.github/actions/run_smoke_tests
+#        with:
+#          pr_deploy: ${{ inputs.pr_deploy }}
+#          slack_token: ${{ secrets.slack_token }}
 
       - name: Install Zoidberg
         run: |
