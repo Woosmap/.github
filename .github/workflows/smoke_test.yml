@@ -83,5 +83,5 @@ jobs:
             exit 1
           fi
         env:
-          WOOSMAP_DEVELOP_API_KEY: ${{ secrets.WOOSMAP_DEVELOP_API_KEY }}
-          WOOSMAP_PROD_API_KEY: ${{ secrets.WOOSMAP_PROD_API_KEY }}
+          WOOSMAP_DEVELOP_API_KEY: ${{ secrets.woosmap_develop_api_key }}
+          WOOSMAP_PROD_API_KEY: ${{ secrets.woosmap_prod_api_key }}
