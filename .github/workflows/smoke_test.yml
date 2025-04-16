@@ -33,6 +33,10 @@ on:
         required: true
       slack_token:
         required: true
+      woosmap_develop_api_key:
+        required: true
+      woosmap_prod_api_key:
+        required: true
 
 jobs:
   check_actions:
