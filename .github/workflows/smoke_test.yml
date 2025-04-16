@@ -82,3 +82,6 @@ jobs:
             echo "Non regression tests FAILED"
             exit 1
           fi
+        env:
+          WOOSMAP_DEVELOP_API_KEY: ${{ secrets.WOOSMAP_DEVELOP_API_KEY }}
+          WOOSMAP_PROD_API_KEY: ${{ secrets.WOOSMAP_PROD_API_KEY }}
