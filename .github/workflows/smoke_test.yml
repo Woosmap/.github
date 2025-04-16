@@ -74,9 +74,9 @@ jobs:
       - name: Run zoidberg non regression tests
         run: |
           if [[ ${{ inputs.pr_deploy }} == true ]]; then
-            output=$(zoidberg -d ./zoidberg_tests distance)
-            else
             output=$(zoidberg -d ./zoidberg_tests -p ${{ inputs.pr }} distance -v)
+            else
+            output=$(zoidberg -d ./zoidberg_tests distance)
           fi
           echo "Script Output: $output"
           if [[ $output != "OK" ]]; then
