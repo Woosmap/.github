@@ -1,0 +1,14 @@
+name: Check Open API schema changes
+
+on:
+  workflow_call:
+
+jobs:
+  check_actions:
+    runs-on: ubuntu-24.04
+    name: Open API Diffrence
+
+    steps:
+     - name: getting repo name
+       run: |
+          echo '$GITHUB_REPOSITORY'
