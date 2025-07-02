@@ -95,12 +95,13 @@ runs:
             // 0) Grab the PR payload
             const publicOwner = context.repo.owner;
             const publicRepo  = context.repo.repo;
+            const prNumber    = ${{ env.PR_NUMBER }};
             
             // 0.1) grab PR details
             const { data: pr } = await github.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: ${{ env.PR_NUMBER }}
+              owner: publicOwner,
+              repo: publicRepo,
+              pull_number: prNumber
             });
 
             // 1) Prepare private target repo
