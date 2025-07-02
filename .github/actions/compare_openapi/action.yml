@@ -43,42 +43,47 @@ runs:
         set -e
         echo "status=false" >> $GITHUB_OUTPUT
 
-        # Split the string into an array
-        IFS=',' read -ra items <<< "${{ steps.set_product.outputs.product }}"
+        if [ -z "$PR_NUMBER" ]; then
+          echo "PR_NUMBER is empty"
+          exit 0
+        else
+          # Split the string into an array
+          IFS=',' read -ra items <<< "${{ steps.set_product.outputs.product }}"
 
-        # Loop through the array
-        for item in "${items[@]}"; do
-          echo "Fetching dev schema..."
-          DEV_URL="https://develop-api.woosmap.com/$item/openapi.json"
-          DEV_RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code}" "$DEV_URL")
-          DEV_BODY=$(echo "$DEV_RESPONSE" | sed -e 's/HTTPSTATUS\:.*//g')
-          DEV_STATUS=$(echo "$DEV_RESPONSE" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+          # Loop through the array
+          for item in "${items[@]}"; do
+            echo "Fetching dev schema..."
+            DEV_URL="https://develop-api.woosmap.com/$item/openapi.json"
+            DEV_RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code}" "$DEV_URL")
+            DEV_BODY=$(echo "$DEV_RESPONSE" | sed -e 's/HTTPSTATUS\:.*//g')
+            DEV_STATUS=$(echo "$DEV_RESPONSE" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 
-          if [ "$DEV_STATUS" -ne 200 ]; then
-            echo "❌ Failed to fetch dev schema. HTTP Status: $DEV_STATUS"
-            exit 1
-          fi
-          echo "$DEV_BODY" | jq 'del(.info)' > dev_schema.json
+            if [ "$DEV_STATUS" -ne 200 ]; then
+              echo "❌ Failed to fetch dev schema. HTTP Status: $DEV_STATUS"
+              exit 1
+            fi
+            echo "$DEV_BODY" | jq 'del(.info)' > dev_schema.json
 
-          echo "Fetching PR schema..."
-          PR_URL="https://develop-api.woosmap.com/${{ github.event.number }}/$item/openapi.json"
-          PR_RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code}" "$PR_URL")
-          PR_BODY=$(echo "$PR_RESPONSE" | sed -e 's/HTTPSTATUS\:.*//g')
-          PR_STATUS=$(echo "$PR_RESPONSE" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
+            echo "Fetching PR schema..."
+            PR_URL="https://develop-api.woosmap.com/$PR_NUMBER/$item/openapi.json"
+            PR_RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code}" "$PR_URL")
+            PR_BODY=$(echo "$PR_RESPONSE" | sed -e 's/HTTPSTATUS\:.*//g')
+            PR_STATUS=$(echo "$PR_RESPONSE" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 
-          if [ "$PR_STATUS" -ne 200 ]; then
-            echo "❌ Failed to fetch PR schema. HTTP Status: $PR_STATUS"
-            exit 1
-          fi
-          echo "$PR_BODY" | jq 'del(.info) | walk(if type == "object" then with_entries(.key |= gsub("/${{ github.event.number }}/"; "/")) else . end)' > latest_schema.json
+            if [ "$PR_STATUS" -ne 200 ]; then
+              echo "❌ Failed to fetch PR schema. HTTP Status: $PR_STATUS"
+              exit 1
+            fi
+            echo "$PR_BODY" | jq 'del(.info) | walk(if type == "object" then with_entries(.key |= gsub("/${{ github.event.number }}/"; "/")) else . end)' > latest_schema.json
 
-          if diff dev_schema.json latest_schema.json > /dev/null; then
-              echo "Files are the same"
-          else
-              echo "Files are different"
-              echo "status=true" >> $GITHUB_OUTPUT
-          fi
-        done
+            if diff dev_schema.json latest_schema.json > /dev/null; then
+                echo "Files are the same"
+            else
+                echo "Files are different"
+                echo "status=true" >> $GITHUB_OUTPUT
+            fi
+          done
+        fi
         
         
     - name: Create issue in Woosmap/woosmap if schemas changed
