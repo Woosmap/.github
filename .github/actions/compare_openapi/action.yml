@@ -74,7 +74,7 @@ runs:
               echo "❌ Failed to fetch PR schema. HTTP Status: $PR_STATUS"
               exit 1
             fi
-            echo "$PR_BODY" | jq 'del(.info) | walk(if type == "object" then with_entries(.key |= gsub("/${{ github.event.number }}/"; "/")) else . end)' > latest_schema.json
+            echo "$PR_BODY" | jq 'del(.info) | walk(if type == "object" then with_entries(.key |= gsub("/$$PR_NUMBER/"; "/")) else . end)' > latest_schema.json
 
             if diff dev_schema.json latest_schema.json > /dev/null; then
                 echo "Files are the same"
@@ -93,7 +93,7 @@ runs:
           github-token: ${{ env.WOOSMAP_NEW_ISSUE_ACCESS_TOKEN }}
           script: |
             // 0) Grab the PR payload
-            const pr = context.payload.pull_request;
+            const pr = ${{ env.PR_NUMBER }};
             const publicOwner = context.repo.owner;
             const publicRepo  = context.repo.repo;
 
@@ -123,7 +123,7 @@ runs:
                 {
                   owner: publicOwner,
                   repo:  publicRepo,
-                  pull_number: pr.number,
+                  pull_number: pr,
                   mediaType: { format: 'diff' }
                 }
               );
@@ -177,7 +177,7 @@ runs:
         payload: |
           {
             "channel": "#${{ env.WOOSMAP_SLACK_CHANNEL }}",
-            "text": "🚨 OpenAPI schema has changed. Please refer to the PR <${{ github.event.pull_request.html_url }}|#${{ github.event.pull_request.number }}> for more insights."
+            "text": "🚨 OpenAPI schema has changed. Please refer to the PR <https://github.com/${{ github.repository }}/pull/${{ env.PR_NUMBER }}|#${{ env.PR_NUMBER }}> for more insights."
           }
       env:
         SLACK_WEBHOOK_URL: ${{ env.WOOSMAP_SLACK_WEBHOOK }}
