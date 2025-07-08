@@ -9,7 +9,7 @@ runs:
       uses: actions/github-script@v6
       id: check_label
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ env.GITHUB_TOKEN }}
         script: |
           const prNumber = context.payload.pull_request?.number || context.issue.number;
           const labelToCheck = "openapi-changed"; // 🔁 your label name
@@ -26,10 +26,10 @@ runs:
       
         
     - name: Create issue in Woosmap/woosmap if schemas changed
-      if: steps.check_label.outputs.label_exists == 'true' && env.WOOSMAP_NEW_ISSUE_ACCESS_TOKEN != ''
+      if: steps.check_label.outputs.label_exists == 'true' && env.GITHUB_TOKEN != ''
       uses: actions/github-script@v6
       with:
-          github-token: ${{ env.WOOSMAP_NEW_ISSUE_ACCESS_TOKEN }}
+          github-token: ${{ env.GITHUB_TOKEN }}
           script: |
             // 0) Grab the PR payload
             const publicOwner = context.repo.owner;
