@@ -88,7 +88,7 @@ runs:
       uses: actions/github-script@v6
       id: check_label
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ env.GITHUB_TOKEN }} 
         script: |
           const prNumber = context.payload.pull_request?.number || context.issue.number;
           const labelToCheck = "openapi-changed"; // 🔁 your label name
@@ -106,7 +106,7 @@ runs:
       if: steps.check_label.outputs.label_exists != 'true' && steps.check_update.outputs.status == 'true'
       uses: actions/github-script@v6
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ env.GITHUB_TOKEN }}
         script: |
           github.rest.issues.addLabels({
             owner: context.repo.owner,
@@ -119,7 +119,7 @@ runs:
       uses: actions/github-script@v6
       if: steps.check_label.outputs.label_exists == 'true' && steps.check_update.outputs.status != 'true'
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ env.GITHUB_TOKEN }}
         script: |
           const prNumber = context.payload.pull_request?.number || context.issue.number;
           await github.rest.issues.removeLabel({
