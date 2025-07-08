@@ -42,7 +42,6 @@ runs:
       run: |
         set -e
         echo "status=false" >> $GITHUB_OUTPUT
-
         if [ -z "$PR_NUMBER" ]; then
           echo "PR_NUMBER is empty"
           exit 0
@@ -84,108 +83,48 @@ runs:
             fi
           done
         fi
-        
-        
-    - name: Create issue in Woosmap/woosmap if schemas changed
-      if: steps.check_update.outputs.status == 'true' && env.WOOSMAP_NEW_ISSUE_ACCESS_TOKEN != ''
+    
+    - name: Check if "openapi-changed" label exists on PR
+      uses: actions/github-script@v6
+      id: check_label
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const prNumber = context.payload.pull_request?.number || context.issue.number;
+          const labelToCheck = "openapi-changed"; // 🔁 your label name
+
+          const { data: labels } = await github.rest.issues.listLabelsOnIssue({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: prNumber,
+          });
+
+          const found = labels.some(label => label.name === labelToCheck);
+          core.setOutput("label_exists", found);
+
+    - name: Add label to PR
+      if: steps.check_label.outputs.label_exists != 'true' && steps.check_update.outputs.status == 'true'
       uses: actions/github-script@v6
       with:
-          github-token: ${{ env.WOOSMAP_NEW_ISSUE_ACCESS_TOKEN }}
-          script: |
-            // 0) Grab the PR payload
-            const publicOwner = context.repo.owner;
-            const publicRepo  = context.repo.repo;
-            const prNumber    = ${{ env.PR_NUMBER }};
-            
-            // 0.1) grab PR details
-            const { data: pr } = await github.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
-              owner: publicOwner,
-              repo: publicRepo,
-              pull_number: prNumber
-            });
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          github.rest.issues.addLabels({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.payload.pull_request.number,
+            labels: ['openapi-changed']
+          });
 
-            // 1) Prepare private target repo
-            const targetOwner = 'Woosmap';
-            const targetRepo  = 'woosmap';
-            const issueTitle  = `${{ steps.set_product.outputs.product }} OpenAPI change: #${pr.number} - ${pr.title}`;
-            const author      = pr.user.login;
-
-            // 2) Dedup via listForRepo on the private repo
-            const { data: openIssues } = await github.rest.issues.listForRepo({
-              owner: targetOwner,
-              repo:  targetRepo,
-              state: 'open',
-              per_page: 10
-            });
-            if (openIssues.some(i => i.title === issueTitle)) {
-              console.log(`Issue "${issueTitle}" already exists; skipping creation.`);
-              return;
-            }
-
-            // 3) Fetch diff from the PUBLIC repo where this PR lives
-            let diffText = '';
-            try {
-              const diffRes = await github.request(
-                'GET /repos/{owner}/{repo}/pulls/{pull_number}',
-                {
-                  owner: publicOwner,
-                  repo:  publicRepo,
-                  pull_number: pr.number,
-                  mediaType: { format: 'diff' }
-                }
-              );
-              diffText = diffRes.data;
-            } catch (err) {
-              console.warn('Unable to fetch PR diff:', err.message);
-            }
-
-            // 4) Truncate or embed the diff
-            let diffBlock = '';
-            if (diffText) {
-              const MAX_FULL = 2000;
-              const MAX_SNIP = 500;
-              if (diffText.length <= MAX_FULL) {
-                diffBlock = '```diff\n' + diffText + '\n```';
-              } else {
-                const snippet = diffText.slice(0, MAX_SNIP) + '\n...';
-                diffBlock = '```diff\n' + snippet + '\n```';
-              }
-            }
-
-            // 5) Build the issue body with a checklist
-            const bodyLines = [
-              `Open API Schema file were updated in PR ${pr.html_url}.`,
-              '',
-              `> ${pr.title}`,
-              '',
-              diffBlock,
-              '',
-              '**Please update these dependent libraries/SDKs/Plugins:**',
-              '- [ ] MapsJS',
-              '- [ ] Native SDK',
-              '- [ ] RN Plugin',
-              '- [ ] Flutter Plugin'
-            ].filter(Boolean);
-
-
-            // 6) Create the issue in the PRIVATE repo, assigned to the PR author
-            await github.rest.issues.create({
-              owner:      targetOwner,
-              repo:       targetRepo,
-              title:      issueTitle,
-              body:       bodyLines.join('\n'),
-              assignees:  [author]
-            });
-
-    - name: Send Slack notification if schemas changed
-      if: steps.check_update.outputs.status == 'true' && env.WOOSMAP_SLACK_WEBHOOK != ''
-      uses: slackapi/slack-github-action@v1
+    - name: Remove label from PR
+      uses: actions/github-script@v6
+      if: steps.check_label.outputs.label_exists == 'true' && steps.check_update.outputs.status != 'true'
       with:
-        payload: |
-          {
-            "channel": "#${{ env.WOOSMAP_SLACK_CHANNEL }}",
-            "text": "🚨 OpenAPI schema has changed. Please refer to the PR <https://github.com/${{ github.repository }}/pull/${{ env.PR_NUMBER }}|#${{ env.PR_NUMBER }}> for more insights."
-          }
-      env:
-        SLACK_WEBHOOK_URL: ${{ env.WOOSMAP_SLACK_WEBHOOK }}
-    
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const prNumber = context.payload.pull_request?.number || context.issue.number;
+          await github.rest.issues.removeLabel({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: prNumber,
+            name: "openapi-changed"  // 🔁 label to remove
+          });
