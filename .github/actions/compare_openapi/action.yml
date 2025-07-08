@@ -91,7 +91,7 @@ runs:
         github-token: ${{ env.GITHUB_TOKEN }} 
         script: |
           const prNumber = context.payload.pull_request?.number || context.issue.number;
-          const labelToCheck = "openapi-changed"; // 🔁 your label name
+          const labelToCheck = "openapi-changed"; 
 
           const { data: labels } = await github.rest.issues.listLabelsOnIssue({
             owner: context.repo.owner,
