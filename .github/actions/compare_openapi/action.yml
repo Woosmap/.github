@@ -154,12 +154,14 @@ runs:
           echo "pr_found=false" >> $GITHUB_OUTPUT
         else
           echo "✅ PR found: $PR_NUMBER"
-          echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+          echo "PR_NUMBER_LOAD=$PR_NUMBER" >> $GITHUB_ENV
           echo "pr_found=true" >> $GITHUB_OUTPUT
         fi
     
     - name: print output
       shell: bash
       run: |
-        echo "PR number:${{ env.PR_NUMBER}}"
+        echo "PR number:${{ env.PR_NUMBER_LOAD}}"
+        echo "SHA:${{ github.sha }}"
+        echo "repo:${{ github.repository}}"
         
