@@ -75,12 +75,16 @@ runs:
             fi
             echo "$PR_BODY" | jq 'del(.info) | walk(if type == "object" then with_entries(.key |= gsub("/$$PR_NUMBER/"; "/")) else . end)' > latest_schema.json
 
-            if diff dev_schema.json latest_schema.json > /dev/null; then
+            if diff dev_schema.json latest_schema.json > diff_output.txt; then
                 echo "Files are the same"
             else
                 echo "Files are different"
+                cat diff_output.txt
+                rm diff_output.txt
                 echo "status=true" >> $GITHUB_OUTPUT
             fi
+            rm dev_schema.json
+            rm latest_schema.json
           done
         fi
     
