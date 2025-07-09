@@ -23,7 +23,7 @@ runs:
             product="distance"
             ;;
           Woosmap/external-api-wrapper)
-            product="traffic,what3words"
+            product="transit,what3words"
             ;;
           Woosmap/geolocation)
             product="geolocation"
