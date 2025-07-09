@@ -58,7 +58,7 @@ runs:
             DEV_STATUS=$(echo "$DEV_RESPONSE" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 
             if [ "$DEV_STATUS" -ne 200 ]; then
-              echo "❌ Failed to fetch dev schema. HTTP Status: $DEV_STATUS"
+              echo "❌ Failed to fetch dev schema $DEV_URL. HTTP Status: $DEV_STATUS"
               exit 1
             fi
             echo "$DEV_BODY" | jq 'del(.info)' > dev_schema.json
@@ -70,7 +70,7 @@ runs:
             PR_STATUS=$(echo "$PR_RESPONSE" | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 
             if [ "$PR_STATUS" -ne 200 ]; then
-              echo "❌ Failed to fetch PR schema. HTTP Status: $PR_STATUS"
+              echo "❌ Failed to fetch PR schema $PR_URL. HTTP Status: $PR_STATUS"
               exit 1
             fi
             echo "$PR_BODY" | jq 'del(.info) | del(.servers) | walk(if type == "object" then with_entries(.key |= gsub("/$$PR_NUMBER/"; "/")) else . end)' > latest_schema.json
