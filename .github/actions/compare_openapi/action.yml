@@ -73,7 +73,7 @@ runs:
               echo "❌ Failed to fetch PR schema. HTTP Status: $PR_STATUS"
               exit 1
             fi
-            echo "$PR_BODY" | jq 'del(.info) | walk(if type == "object" then with_entries(.key |= gsub("/$$PR_NUMBER/"; "/")) else . end)' > latest_schema.json
+            echo "$PR_BODY" | jq 'del(.info) | del(.servers) | walk(if type == "object" then with_entries(.key |= gsub("/$$PR_NUMBER/"; "/")) else . end)' > latest_schema.json
 
             if diff dev_schema.json latest_schema.json > diff_output.txt; then
                 echo "Files are the same"
