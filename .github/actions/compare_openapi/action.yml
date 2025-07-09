@@ -10,8 +10,8 @@ runs:
       shell: bash
       run: |
         case "$GITHUB_REPOSITORY" in
-          Woosmap/map)
-            product="map"
+          Woosmap/maps)
+            product="maps"
             ;;
           Woosmap/indoor)
             product="indoor"
