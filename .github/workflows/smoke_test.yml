@@ -75,9 +75,9 @@ jobs:
         run: |
           if [ -d "./zoidberg_tests" ]; then
             if [[ ${{ inputs.pr_deploy }} == true ]]; then
-              output=$(zoidberg -d ./zoidberg_tests -p ${{ inputs.pr }} distance)
+              output=$(zoidberg -d ./zoidberg_tests -p ${{ inputs.pr }} distance -v)
             else
-              output=$(zoidberg -d ./zoidberg_tests distance)
+              output=$(zoidberg -d ./zoidberg_tests distance -v)
             fi
             echo "Script Output: $output"
             if [[ $output != "OK" ]]; then
