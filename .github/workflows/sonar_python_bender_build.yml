@@ -67,7 +67,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Woosmap/build-helper
-          ref: ${{ env.HELPER_VERSION }}
+          ref: dev/zoidberg_smoke_tests
           token: ${{ secrets.helper_token }}
           path: helper
           fetch-depth: 1
