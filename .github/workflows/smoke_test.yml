@@ -83,7 +83,8 @@ jobs:
               output=$(zoidberg -d ./zoidberg_tests distance -v)
             fi
             echo "Script Output: $output"
-            if [[ $output | tail -1 != "OK" ]]; then
+            result = echo $output | tail -1
+            if [[ $result != "OK" ]]; then
               echo "Non regression tests FAILED"
               exit 1
             fi
