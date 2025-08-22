@@ -84,8 +84,8 @@ jobs:
             fi
             
             result=$(echo $output | tail -1 | tr -d '[:space:]')
-            echo "Rsult : $result"
-            if [[ $result != "OK" ]]; then
+            echo "Result : $result"
+            if [[ $result != "success" ]]; then
               echo "Non regression tests FAILED"
               exit 1
             fi
