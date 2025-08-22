@@ -71,6 +71,9 @@ jobs:
         with:
           pr_deploy: ${{ inputs.pr_deploy }}
           slack_token: ${{ secrets.slack_token }}
+        env:
+          WOOSMAP_DEVELOP_API_KEY: ${{ secrets.woosmap_develop_api_key }}
+          WOOSMAP_PROD_API_KEY: ${{ secrets.woosmap_prod_api_key }}
       - name: Run zoidberg non regression tests
         run: |
           if [ -d "./zoidberg_tests" ]; then
