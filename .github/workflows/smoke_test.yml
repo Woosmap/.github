@@ -80,13 +80,13 @@ jobs:
           WOOSMAP_DEVELOP_API_KEY: ${{ secrets.woosmap_develop_api_key }}
           WOOSMAP_PROD_API_KEY: ${{ secrets.woosmap_prod_api_key }}
       - name: Run zoidberg non regression tests
-        if: "${{ github.event.inputs.regression_tests != '' }}"
+        if: "${{ inputs.regression_tests != '' }}"
         run: |
           if [ -d "./zoidberg_tests" ]; then
             if [[ ${{ inputs.pr_deploy }} == true ]]; then
-              output=$(zoidberg -d ./zoidberg_tests -p ${{ inputs.pr }} ${{ github.event.inputs.regression_tests }} -v)
+              output=$(zoidberg -d ./zoidberg_tests -p ${{ inputs.pr }} ${{ inputs.regression_tests }} -v)
             else
-              output=$(zoidberg -d ./zoidberg_tests ${{ github.event.inputs.regression_tests }} -v)
+              output=$(zoidberg -d ./zoidberg_tests ${{ inputs.regression_tests }} -v)
             fi
             
             result=$(echo $output | tail -1 | tr -d '[:space:]')
