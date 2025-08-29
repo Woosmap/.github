@@ -28,10 +28,19 @@ on:
         required: false
         default: 'false'
         type: string
+      regression_tests:
+        description: 'Run non regression tests'
+        required: false
+        default: ''
+        type: string
     secrets:
       helper_token:
         required: true
       slack_token:
+        required: true
+      woosmap_develop_api_key:
+        required: true
+      woosmap_prod_api_key:
         required: true
 
 jobs:
@@ -57,8 +66,36 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Install Zoidberg
+        run: |
+          echo "deb [trusted=yes] https://Pfii9sZDGkGXEhXEmStx@apt.fury.io/webgeoservices/ /" | sudo tee /etc/apt/sources.list.d/gemfury.list
+          sudo apt-get update
+          sudo apt-get install -y zoidberg
       - name: Smoke Test
         uses: ./helper/.github/actions/run_smoke_tests
         with:
           pr_deploy: ${{ inputs.pr_deploy }}
           slack_token: ${{ secrets.slack_token }}
+        env:
+          WOOSMAP_DEVELOP_API_KEY: ${{ secrets.woosmap_develop_api_key }}
+          WOOSMAP_PROD_API_KEY: ${{ secrets.woosmap_prod_api_key }}
+      - name: Run zoidberg non regression tests
+        if: "${{ inputs.regression_tests != '' }}"
+        run: |
+          if [ -d "./zoidberg_tests" ]; then
+            if [[ ${{ inputs.pr_deploy }} == true ]]; then
+              output=$(zoidberg -d ./zoidberg_tests -p ${{ inputs.pr }} ${{ inputs.regression_tests }} -v)
+            else
+              output=$(zoidberg -d ./zoidberg_tests ${{ inputs.regression_tests }} -v)
+            fi
+            
+            result=$(echo $output | tail -1 | tr -d '[:space:]')
+            echo "Result : $result"
+            if [[ $result != "success" ]]; then
+              echo "Non regression tests FAILED"
+              exit 1
+            fi
+          fi
+        env:
+          WOOSMAP_DEVELOP_API_KEY: ${{ secrets.woosmap_develop_api_key }}
+          WOOSMAP_PROD_API_KEY: ${{ secrets.woosmap_prod_api_key }}
