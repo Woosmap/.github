@@ -39,9 +39,9 @@ on:
       slack_token:
         required: true
       woosmap_develop_api_key:
-        required: true
+        required: false
       woosmap_prod_api_key:
-        required: true
+        required: false
 
 jobs:
   check_actions:
