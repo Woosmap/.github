@@ -22,6 +22,12 @@ body:
     required: true
 - type: textarea
   attributes:
+    label: Documentation?
+    description: Are there any internal or public documentation updates that should come with this change.
+  validations:
+    required: true
+- type: textarea
+  attributes:
     label: Engineering Section
     description: After engineers have discussed are there any comments, solution points or push back
 - type: textarea
