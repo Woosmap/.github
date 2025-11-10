@@ -4,11 +4,11 @@ on:
   workflow_call:
     inputs:
       envs:
-        default: ''
+        default: ""
         required: false
         type: string
       install:
-        default: ''
+        default: ""
         required: false
         type: string
     secrets:
@@ -73,7 +73,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
       - name: Login to AWS ECR
         uses: docker/login-action@v3
         with:
@@ -82,7 +82,7 @@ jobs:
           password: ${{ secrets.aws_key }}
       - name: Install Bender
         run: |
-          pip install --break-system-packages --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender==2.1.*"
+          pip install --break-system-packages --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender<4"
       - name: Install Required Packages
         if: ${{ inputs.install }} != ''
         run: |

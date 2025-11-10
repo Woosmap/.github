@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       install:
-        default: ''
+        default: ""
         required: false
         type: string
       download_merchant_ml:
@@ -79,7 +79,7 @@ jobs:
           password: ${{ secrets.aws_key }}
       - name: Install Bender
         run: |
-          pip install --break-system-packages --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender==2.2.*"
+          pip install --break-system-packages --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender<4"
       - name: Install Required Packages
         if: ${{ inputs.install }} != ''
         run: |
@@ -97,8 +97,8 @@ jobs:
       - name: Cache code coverage
         uses: ./helper/.github/actions/cache
         with:
-          path: './coverage/coverage.xml'
-          key: 'coverage'
+          path: "./coverage/coverage.xml"
+          key: "coverage"
           cache_aws_key_id: ${{ secrets.cache_aws_key_id }}
           cache_aws_key: ${{ secrets.cache_aws_key }}
       - name: SonarCloud Scan
@@ -113,5 +113,5 @@ jobs:
       - name: PR Deploy
         uses: ./helper/.github/actions/deploy
         with:
-          pr_deploy: 'true'
+          pr_deploy: "true"
           leela_token: ${{ secrets.leela_token }}
