@@ -107,7 +107,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.helper_token }}
           SONAR_TOKEN: ${{ secrets.sonar_token}}
         with:
-          args: -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+          args: >
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+            -Dsonar.scm.revision=${{ github.event.pull_request.head.sha }}
       - name: Publish
         uses: ./helper/.github/actions/publish
         with:
