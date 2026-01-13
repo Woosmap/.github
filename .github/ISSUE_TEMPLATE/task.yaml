@@ -1,43 +1,29 @@
-name: Feature 📗
-description: Track a single simple piece of work
+name: Task 📗
+description: Track a valuable piece of work
 labels: []
 projects: ["Woosmap/29"]
 
 body:
-- type: markdown
-  attributes:
-    value: |
-      For more info on how to use a Task look [here](https://docs.woosmap.dev/how_we_work/issues/#tasks)
-- type: textarea
-  attributes:
-    label: What?
-    description: Detailed description of the task.
-  validations:
-    required: true
-- type: textarea
-  attributes:
-    label: Why?
-    description: Why is this change important.
-  validations:
-    required: true
-- type: textarea
-  attributes:
-    label: Documentation?
-    description: Are there any internal or public documentation updates that should come with this change.
-  validations:
-    required: true
-- type: textarea
-  attributes:
-    label: Engineering Section
-    description: After engineers have discussed are there any comments, solution points or push back
-- type: textarea
-  attributes:
-    label: Blockers
-    description: List tasks, info etc., if any, which must be completed to start this one.
-    placeholder: |
-      "- [ ] <Woosmap/maps#1>"
-- type: markdown
-  attributes:
-    value: |
-      Thanks for completing the form!
-      Don't forget to fill in the project fields.
+  - type: markdown
+    attributes:
+      value: |
+        For more info on how to use a Task look [here](https://docs.woosmap.dev/how_we_work/issues/#tasks)
+  - type: textarea
+    attributes:
+      label: What?
+      description: Detailed description of the problem or opportunity. What needs to change?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Why?
+      description: |
+        The value it adds. Who benifits and how? Is this customer pain point, internal efficiency or a
+        security requirement etc.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for completing the form!
+        Don't forget to shape it later to add more information!
