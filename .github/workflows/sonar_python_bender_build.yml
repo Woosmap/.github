@@ -16,6 +16,11 @@ on:
         default: false
         required: false
         type: boolean
+      multi_arch:
+        description: 'Enable multi-architecture builds (amd64 + arm64)'
+        default: false
+        required: false
+        type: boolean
     secrets:
       helper_token:
         required: true
@@ -47,14 +52,18 @@ jobs:
     if: |
       (github.event_name == 'pull_request' && github.actor != 'dependabot[bot]') ||
       (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]')
-    runs-on: ubuntu-24.04
-    name: Build, Test, Sonar, Publish
+    strategy:
+      matrix:
+        include: ${{ fromJson(inputs.multi_arch && '[{"runner":"ubuntu-24.04","arch":"amd64"},{"runner":"ubuntu-24.04-arm","arch":"arm64"}]' || '[{"runner":"ubuntu-24.04","arch":"amd64"}]') }}
+    runs-on: ${{ matrix.runner }}
+    name: Build, Test, Sonar, Publish${{ inputs.multi_arch && format(' ({0})', matrix.arch) || '' }}
     env:
       is_reco: ${{ secrets.maxmind }}
       docker_password: ${{ secrets.dockerhub_ro_token }}
       TERM: xterm-256color
       FORCE_COLOR: 2
       DOCKER_BUILDKIT: 1
+      ARCH_SUFFIX: ${{ inputs.multi_arch && format('-{0}', matrix.arch) || '' }}
     steps:
       - name: Login to Docker Hub
         if: ${{ env.docker_password }}
@@ -92,8 +101,10 @@ jobs:
       - name: Bender Build
         uses: ./helper/.github/actions/builder
       - name: Bender Test
+        if: matrix.arch == 'amd64'
         uses: ./helper/.github/actions/run_tests
       - name: Cache code coverage
+        if: matrix.arch == 'amd64'
         uses: ./helper/.github/actions/cache
         with:
           path: "./coverage/coverage.xml"
@@ -101,6 +112,7 @@ jobs:
           cache_aws_key_id: ${{ secrets.cache_aws_key_id }}
           cache_aws_key: ${{ secrets.cache_aws_key }}
       - name: SonarCloud Scan
+        if: matrix.arch == 'amd64'
         uses: SonarSource/sonarqube-scan-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.helper_token }}
@@ -114,7 +126,43 @@ jobs:
         with:
           leela_token: ${{ secrets.leela_token }}
       - name: PR Deploy
+        if: matrix.arch == 'amd64'
         uses: ./helper/.github/actions/deploy
         with:
           pr_deploy: "true"
           leela_token: ${{ secrets.leela_token }}
+
+  create_manifest:
+    if: |
+      inputs.multi_arch &&
+      ((github.event_name == 'pull_request' && github.actor != 'dependabot[bot]') ||
+      (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]'))
+    needs: test_actions
+    runs-on: ubuntu-24.04
+    name: Create multi-arch manifest
+    env:
+      docker_password: ${{ secrets.dockerhub_ro_token }}
+      TERM: xterm-256color
+      FORCE_COLOR: 2
+    steps:
+      - name: Login to Docker Hub
+        if: ${{ env.docker_password }}
+        uses: docker/login-action@v3
+        with:
+          username: "woosmap"
+          password: ${{ secrets.dockerhub_ro_token }}
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: Woosmap/.github/.github/actions/checkout_build_helper@master
+        with:
+          helper_token: ${{ secrets.helper_token }}
+          build_helper_branch: ${{ inputs.build_helper_branch }}
+      - name: Login to AWS ECR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.aws_account }}.dkr.ecr.us-east-1.amazonaws.com
+          username: ${{ secrets.aws_key_id }}
+          password: ${{ secrets.aws_key }}
+      - name: Create Manifest
+        uses: ./helper/.github/actions/create_manifest
