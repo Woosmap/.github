@@ -154,7 +154,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - uses: Woosmap/.github/.github/actions/checkout_build_helper@master
+      - uses: Woosmap/.github/.github/actions/checkout_build_helper@dev/build-helper-branch-override
         with:
           helper_token: ${{ secrets.helper_token }}
           build_helper_branch: ${{ inputs.build_helper_branch }}
