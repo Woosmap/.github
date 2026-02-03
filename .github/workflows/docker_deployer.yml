@@ -43,7 +43,7 @@ jobs:
           username: "woosmap"
           password: ${{ secrets.dockerhub_ro_token }}
       - uses: actions/checkout@v4
-      - uses: Woosmap/.github/.github/actions/checkout_build_helper@master
+      - uses: Woosmap/.github/.github/actions/checkout_build_helper@dev/build-helper-branch-override
         with:
           helper_token: ${{ secrets.helper_token }}
           build_helper_branch: ${{ inputs.build_helper_branch }}
