@@ -1,0 +1,31 @@
+name: Checkout Build Helper
+description: Checkout the build-helper repository at the specified branch or latest v8.* tag
+
+inputs:
+  helper_token:
+    description: 'GitHub token for accessing build-helper repo'
+    required: true
+  build_helper_branch:
+    description: 'Build-helper branch to use (defaults to latest v8.* tag)'
+    required: false
+    default: ''
+
+runs:
+  using: 'composite'
+
+  steps:
+    - name: Getting Build-Helper Tag
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.build_helper_branch }}" ]; then
+          echo "HELPER_VERSION=${{ inputs.build_helper_branch }}" >> $GITHUB_ENV
+        else
+          echo "HELPER_VERSION=$(git ls-remote --tags --sort="v:refname" https://${{ inputs.helper_token }}@github.com/Woosmap/build-helper.git v8.\* | awk '{print $2}' | tail -n 1)" >> $GITHUB_ENV
+        fi
+    - uses: actions/checkout@v4
+      with:
+        repository: Woosmap/build-helper
+        ref: ${{ env.HELPER_VERSION }}
+        token: ${{ inputs.helper_token }}
+        path: helper
+        fetch-depth: 1
