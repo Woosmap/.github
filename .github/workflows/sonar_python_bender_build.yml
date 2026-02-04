@@ -123,10 +123,8 @@ jobs:
             -Dsonar.scm.revision=${{ github.event.pull_request.head.sha }}
       - name: Publish
         uses: ./helper/.github/actions/publish
-        with:
-          leela_token: ${{ secrets.leela_token }}
       - name: PR Deploy
-        if: matrix.arch == 'amd64'
+        if: matrix.arch == 'amd64' && !inputs.multi_arch
         uses: ./helper/.github/actions/deploy
         with:
           pr_deploy: "true"
@@ -166,3 +164,28 @@ jobs:
           password: ${{ secrets.aws_key }}
       - name: Create Manifest
         uses: ./helper/.github/actions/create_manifest
+
+  pr_deploy:
+    if: |
+      inputs.multi_arch &&
+      ((github.event_name == 'pull_request' && github.actor != 'dependabot[bot]') ||
+      (github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]'))
+    needs: create_manifest
+    runs-on: ubuntu-24.04
+    name: Deploy PR to develop
+    env:
+      TERM: xterm-256color
+      FORCE_COLOR: 2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: Woosmap/.github/.github/actions/checkout_build_helper@master
+        with:
+          helper_token: ${{ secrets.helper_token }}
+          build_helper_branch: ${{ inputs.build_helper_branch }}
+      - name: Deploy PR
+        uses: ./helper/.github/actions/deploy
+        with:
+          pr_deploy: "true"
+          leela_token: ${{ secrets.leela_token }}
