@@ -82,7 +82,7 @@ jobs:
           cache_aws_key_id: ${{ secrets.cache_aws_key_id }}
           cache_aws_key: ${{ secrets.cache_aws_key }}
       - name: Deploy Develop
-        if: matrix.arch == 'amd64'
+        if: matrix.arch == 'amd64' && !inputs.multi_arch
         uses: ./helper/.github/actions/deploy
         with:
           leela_token: ${{ secrets.leela_token }}
@@ -133,3 +133,24 @@ jobs:
           password: ${{ secrets.aws_key }}
       - name: Create Release Manifest
         uses: ./helper/.github/actions/create_release_manifest
+
+  deploy_develop:
+    if: inputs.multi_arch
+    needs: create_release_manifest
+    runs-on: ubuntu-24.04
+    name: Deploy develop
+    env:
+      TERM: xterm-256color
+      FORCE_COLOR: 2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: Woosmap/.github/.github/actions/checkout_build_helper@master
+        with:
+          helper_token: ${{ secrets.helper_token }}
+          build_helper_branch: ${{ inputs.build_helper_branch }}
+      - name: Deploy Develop
+        uses: ./helper/.github/actions/deploy
+        with:
+          leela_token: ${{ secrets.leela_token }}
