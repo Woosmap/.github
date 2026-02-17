@@ -63,6 +63,7 @@ jobs:
       TERM: xterm-256color
       FORCE_COLOR: 2
       DOCKER_BUILDKIT: 1
+      BUILDX_NO_DEFAULT_ATTESTATIONS: ${{ inputs.multi_arch && '1' || '' }}
       ARCH_SUFFIX: ${{ inputs.multi_arch && format('-{0}', matrix.arch) || '' }}
     steps:
       - name: Login to Docker Hub
@@ -89,7 +90,7 @@ jobs:
         run: |
           pip install --break-system-packages --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender<4"
       - name: Install Required Packages
-        if: ${{ inputs.install }} != ''
+        if: ${{ inputs.install != '' }}
         run: |
           sudo apt install --no-install-recommends --yes ${{ inputs.install }}
       - name: Download GeoIP (maxmind) DB (for woosmapreco)
