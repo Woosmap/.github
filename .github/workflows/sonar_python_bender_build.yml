@@ -99,11 +99,11 @@ jobs:
           ./download_geoip_database.sh
         env:
           MAXMIND: ${{ secrets.maxmind }}
-      - name: Bender Build
-        uses: ./helper/.github/actions/builder
       - name: Bender Test
         if: matrix.arch == 'amd64'
         uses: ./helper/.github/actions/run_tests
+      - name: Bender Build
+        uses: ./helper/.github/actions/builder
       - name: Cache code coverage
         if: matrix.arch == 'amd64'
         uses: ./helper/.github/actions/cache
