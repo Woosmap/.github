@@ -9,7 +9,10 @@ on:
         required: false
         type: string
       multi_arch:
-        description: 'Enable multi-architecture builds (amd64 + arm64)'
+        # Deprecated no-op. Kept so legacy callers passing `multi_arch:` still
+        # pass YAML validation. Builds are arm64-only now; remove from callers
+        # at leisure, then drop this input.
+        description: '[Deprecated] No-op — kept for backwards compatibility with legacy callers.'
         default: false
         required: false
         type: boolean
@@ -39,18 +42,14 @@ on:
 
 jobs:
   deploy_actions:
-    strategy:
-      matrix:
-        include: ${{ fromJson(inputs.multi_arch && '[{"runner":"ubuntu-24.04","arch":"amd64"},{"runner":"ubuntu-24.04-arm","arch":"arm64"}]' || '[{"runner":"ubuntu-24.04","arch":"amd64"}]') }}
-    runs-on: ${{ matrix.runner }}
-    name: Deploy Docker${{ inputs.multi_arch && format(' ({0})', matrix.arch) || '' }}
+    runs-on: ubuntu-24.04-arm
+    name: Deploy Docker
     env:
       docker_password: ${{ secrets.dockerhub_ro_token }}
       TERM: xterm-256color
       FORCE_COLOR: 2
       DOCKER_BUILDKIT: 1
       BUILDX_NO_DEFAULT_ATTESTATIONS: 1
-      ARCH_SUFFIX: ${{ inputs.multi_arch && format('-{0}', matrix.arch) || '' }}
     steps:
       - name: Login to Docker Hub
         if: ${{ env.docker_password }}
@@ -83,12 +82,10 @@ jobs:
           cache_aws_key_id: ${{ secrets.cache_aws_key_id }}
           cache_aws_key: ${{ secrets.cache_aws_key }}
       - name: Deploy Develop
-        if: matrix.arch == 'amd64' && !inputs.multi_arch
         uses: ./helper/.github/actions/deploy
         with:
           leela_token: ${{ secrets.leela_token }}
       - name: Restore code coverage cache
-        if: matrix.arch == 'amd64'
         uses: ./helper/.github/actions/cache
         with:
           restore: "true"
@@ -97,61 +94,7 @@ jobs:
           cache_aws_key_id: ${{ secrets.cache_aws_key_id }}
           cache_aws_key: ${{ secrets.cache_aws_key }}
       - name: SonarCloud Scan
-        if: matrix.arch == 'amd64'
         uses: SonarSource/sonarqube-scan-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.helper_token }}
           SONAR_TOKEN: ${{ secrets.sonar_token}}
-
-  create_release_manifest:
-    if: inputs.multi_arch
-    needs: deploy_actions
-    runs-on: ubuntu-24.04
-    name: Create multi-arch release manifest
-    env:
-      docker_password: ${{ secrets.dockerhub_ro_token }}
-      TERM: xterm-256color
-      FORCE_COLOR: 2
-    steps:
-      - name: Login to Docker Hub
-        if: ${{ env.docker_password }}
-        uses: docker/login-action@v3
-        with:
-          username: "woosmap"
-          password: ${{ secrets.dockerhub_ro_token }}
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: Woosmap/.github/.github/actions/checkout_build_helper@master
-        with:
-          helper_token: ${{ secrets.helper_token }}
-          build_helper_branch: ${{ inputs.build_helper_branch }}
-      - name: Login to AWS ECR
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ secrets.aws_account }}.dkr.ecr.us-east-1.amazonaws.com
-          username: ${{ secrets.aws_key_id }}
-          password: ${{ secrets.aws_key }}
-      - name: Create Release Manifest
-        uses: ./helper/.github/actions/create_release_manifest
-
-  deploy_develop:
-    if: inputs.multi_arch
-    needs: create_release_manifest
-    runs-on: ubuntu-24.04
-    name: Deploy develop
-    env:
-      TERM: xterm-256color
-      FORCE_COLOR: 2
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: Woosmap/.github/.github/actions/checkout_build_helper@master
-        with:
-          helper_token: ${{ secrets.helper_token }}
-          build_helper_branch: ${{ inputs.build_helper_branch }}
-      - name: Deploy Develop
-        uses: ./helper/.github/actions/deploy
-        with:
-          leela_token: ${{ secrets.leela_token }}
