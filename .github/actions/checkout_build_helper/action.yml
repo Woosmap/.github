@@ -16,11 +16,14 @@ runs:
   steps:
     - name: Getting Build-Helper Tag
       shell: bash
+      env:
+        BUILD_HELPER_BRANCH: ${{ inputs.build_helper_branch }}
+        HELPER_TOKEN: ${{ inputs.helper_token }}
       run: |
-        if [ -n "${{ inputs.build_helper_branch }}" ]; then
-          echo "HELPER_VERSION=${{ inputs.build_helper_branch }}" >> $GITHUB_ENV
+        if [ -n "$BUILD_HELPER_BRANCH" ]; then
+          echo "HELPER_VERSION=$BUILD_HELPER_BRANCH" >> $GITHUB_ENV
         else
-          echo "HELPER_VERSION=$(git ls-remote --tags --sort="v:refname" https://${{ inputs.helper_token }}@github.com/Woosmap/build-helper.git v8.\* | awk '{print $2}' | tail -n 1)" >> $GITHUB_ENV
+          echo "HELPER_VERSION=$(git ls-remote --tags --sort="v:refname" "https://${HELPER_TOKEN}@github.com/Woosmap/build-helper.git" v8.\* | awk '{print $2}' | tail -n 1)" >> $GITHUB_ENV
         fi
     - uses: actions/checkout@v4
       with:
