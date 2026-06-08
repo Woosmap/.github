@@ -90,8 +90,10 @@ jobs:
           pip install --break-system-packages --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender<4"
       - name: Install Required Packages
         if: ${{ inputs.install != '' }}
+        env:
+          INSTALL: ${{ inputs.install }}
         run: |
-          sudo apt install --no-install-recommends --yes ${{ inputs.install }}
+          sudo apt install --no-install-recommends --yes ${INSTALL}
       - name: Download GeoIP (maxmind) DB (for woosmapreco)
         if: ${{ env.is_reco }}
         run: |
