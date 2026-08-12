@@ -25,7 +25,7 @@ runs:
         else
           echo "HELPER_VERSION=$(git ls-remote --tags --sort="v:refname" "https://${HELPER_TOKEN}@github.com/Woosmap/build-helper.git" v8.\* | awk '{print $2}' | tail -n 1)" >> $GITHUB_ENV
         fi
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.4.0
       with:
         repository: Woosmap/build-helper
         ref: ${{ env.HELPER_VERSION }}
