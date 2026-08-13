@@ -57,12 +57,12 @@ jobs:
       FORCE_COLOR: 2
       DOCKER_BUILDKIT: 1
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.4.0
       - uses: Woosmap/.github/.github/actions/checkout_build_helper@master
         with:
           helper_token: ${{ secrets.helper_token }}
           build_helper_branch: ${{ inputs.build_helper_branch }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4.4.0
         with:
           node-version: '20'
       - name: Install Zoidberg
