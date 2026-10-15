@@ -82,8 +82,11 @@ jobs:
           username: ${{ secrets.aws_key_id }}
           password: ${{ secrets.aws_key }}
       - name: Install Bender
+        env:
+          GEMFURY_READ_TOKEN: ${{ vars.GEMFURY_READ_TOKEN }}
         run: |
-          pip install --break-system-packages --extra-index-url https://pypi.fury.io/Pfii9sZDGkGXEhXEmStx/webgeoservices/ "bender<4"
+          echo "::add-mask::$GEMFURY_READ_TOKEN"
+          pip install --break-system-packages --extra-index-url "https://${GEMFURY_READ_TOKEN}:@pypi.fury.io/webgeoservices/" "bender<4"
       - name: Install Required Packages
         if: ${{ inputs.install != '' }}
         env:
